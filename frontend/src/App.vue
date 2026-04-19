@@ -1,10 +1,5 @@
-<script>
-import {defineComponent} from "vue";
+<script setup lang="ts">
 import Welcome from "./Welcome.vue";
-
-export default defineComponent({
-    components: {Welcome}
-})
 </script>
 
 <template>
