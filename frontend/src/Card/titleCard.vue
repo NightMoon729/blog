@@ -7,11 +7,11 @@
     </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
     .card{
         padding: 15px;
         color: black;
-        width: calc(100% + 4em);
+        width: 180px;
         background: rgba(218, 246, 244, 0.4);
         backdrop-filter: blur(2px);
         border-radius: 15px;
@@ -31,10 +31,10 @@
             height: 15px;
         }
     }
-    .dark {
-        .card{
-            color: rgba(255, 255, 255, 0.8);
-            background: rgba(2, 12, 12, 0.35);
+    .dark{
+        .card {
+          color: rgba(255, 255, 255, 0.8);
+          background: rgba(2, 12, 12, 0.35);
         }
     }
 </style>

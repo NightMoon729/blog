@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import avatar from '@/assets/Avatar.jpg' //el Ui必须要导入不能在src里写
 import { useElementSize } from '@vueuse/core'
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import { Icon } from '@iconify/vue';
 import TitleCard from "../Card/titleCard.vue";
 import router from "@/router/index";
@@ -12,24 +12,34 @@ const otherShow = ref(false)
 const { height } = useElementSize(HomeTop) //通过变量名自动解析
 const isDark = ref(false)
 
+// 👇 加这个：初始化时读取缓存
+onMounted(() => {
+  const savedTheme = localStorage.getItem('theme')
+  if (savedTheme === 'dark') {
+    isDark.value = true
+    document.documentElement.classList.add('dark')
+  } else if (savedTheme === 'light') {
+    isDark.value = false
+    document.documentElement.classList.remove('dark')
+  }
+})
+
 const LAD = computed(() => {
     return isDark.value ? "prime:moon" : "prime:sun"
 }) //深色模式和浅色模式
-
 const toggleDark = () => {
     isDark.value = !isDark.value
     // 这一行是核心：给 <html> 标签加/删 'dark' class
     document.documentElement.classList.toggle('dark', isDark.value)
+    localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
 }
 
 const avatarSize = computed(() => {
     return height.value * 0.6
 })
-
 const iconSize = computed(() => {
     return `${height.value * 0.3}px`;
 })
-
 const textSize = computed(() => {
     return `${height.value * 0.2}px`;
 })
@@ -61,23 +71,23 @@ const textSize = computed(() => {
                     <div class="title-box"  @mouseenter="otherShow = true" @mouseleave="otherShow = false">
                         <transition name="el-fade-in">
                             <title-card v-if="otherShow">
-                                <el-menu>
-                                    <div class="title-box">
+                                <el-menu router>
+                                    <el-menu-item>
                                         <Icon icon="ix:project"/>
                                         <div>项目展示</div>
-                                    </div>
+                                    </el-menu-item>
 
-                                    <div class="title-box">
+                                    <el-menu-item>
                                         <Icon icon="grommet-icons:technology"></Icon>
                                         <div>技术展示</div>
-                                    </div>
+                                    </el-menu-item>
 
-                                    <div class="title-box"  @click="() => { console.log('点击了'); router.push('/other/algorithm'); }">
+                                    <el-menu-item index="/other/algorithm">
                                         <Icon icon="material-symbols:problem-outline"></Icon>
                                         <div>算法题解</div>
-                                    </div>
+                                    </el-menu-item>
 
-                                    <div>时间线</div>
+                                    <el-menu-item class="sub-title-box">时间线</el-menu-item>
                                 </el-menu>
                             </title-card>
                         </transition>
@@ -85,7 +95,7 @@ const textSize = computed(() => {
 
                         <Icon icon="basil:other-1-outline"/>
                         <div class="text">其他</div>
-                        <Icon icon="oui:arrow-down"/>
+                        <Icon style="margin-left: 3px" icon="oui:arrow-down"/>
                     </div>
                 </div>
 
@@ -110,7 +120,7 @@ const textSize = computed(() => {
 <style scoped lang="scss">
 .home-header {
     width: 100%;
-    height: 70vh;
+    height: 100vh;
     background-image: url("../assets/雪莉1.jpeg");
     background-size: cover;
     background-color: rgba(218, 246, 244, 0.3);
@@ -140,15 +150,42 @@ const textSize = computed(() => {
             position: relative;
             cursor: pointer;
             transition: color 0.3s ease-out;
-
             &:hover {
                 transition: color 0.1s ease-in;
                 color: #377ed3;
             }
 
-            Icon {
+            :deep(.iconify) {
                 font-size: v-bind(iconSize);
+                margin: 0 0.2em;
             }
+
+
+            .el-menu {
+                .el-menu-item {
+                    :deep(.iconify) {
+                        font-size: 20px;
+                    }
+                    div {
+                        font-size: 16px;
+                    }
+                    background-color: rgba(218, 246, 244, 0.3);
+                    background-blend-mode: overlay;
+                    border: solid 1px rgba(50, 74, 74, 0.1);
+                    transition: color 0.3s ease-out;
+                    &:hover {
+                        transition: color 0.1s ease-in;
+                        color: #377ed3;
+                    }
+                }
+                border: solid 1px rgba(50, 74, 74, 0.3);
+                border-radius: 10px;
+            }
+        }
+
+        .el-menu {
+          background-color: rgba(218, 246, 244, 0.3);
+          background-blend-mode: overlay;
         }
     }
 
@@ -183,6 +220,18 @@ const textSize = computed(() => {
         .module{
             .Component{
                 color: rgba(198, 196, 196);
+            }
+        }
+        .title-box {
+            .el-menu{
+                .el-menu-item {
+                    color: white;
+                    background-color: rgba(0, 0, 0, 0.6);
+                    background-blend-mode: overlay;
+                    border-bottom: solid 1px rgba(255, 255, 255, 0.1);
+                }
+                border: solid 1px rgba(255, 255, 255, 0.3);
+                border-radius: 10px;
             }
         }
     }

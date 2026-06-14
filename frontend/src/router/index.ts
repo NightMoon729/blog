@@ -7,11 +7,13 @@ const router = createRouter({
             path: '/',
             name: 'welcome',
             component: () => import('@/views/Welcome.vue'),
-
-        },{
-            path: '/other/algorithm',
-            name: 'algorithm',
-            component: () => import('@/views/other/Algorithm.vue')
+            children: [
+                {
+                    path: '/other/algorithm',
+                    name: 'algorithm',
+                    component: () => import('@/views/other/Algorithm.vue')
+                }
+            ]
         }
     ]
 })

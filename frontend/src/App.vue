@@ -3,5 +3,9 @@ import Welcome from "./views/Welcome.vue";
 </script>
 
 <template>
-    <Welcome/>
+    <router-view/>
 </template>
+
+<style scoped>
+
+</style>
